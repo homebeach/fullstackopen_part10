@@ -1,86 +1,41 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
     padding: 10,
     backgroundColor: '#fff',
   },
-  avatar: {
-    width: 50,
-    height: 50,
-    borderRadius: 5,
-    marginRight: 10,
-  },
-  header: {
-    flexDirection: 'row',
-    marginBottom: 5,
-  },
-  info: {
-    flexDirection: 'column',
-  },
   fullName: {
     fontWeight: 'bold',
+    marginBottom: 5,
   },
   description: {
-    marginTop: 5,
-    color: '#666',
+    marginBottom: 5,
   },
   language: {
-    marginTop: 5,
-    padding: 5,
-    backgroundColor: '#0366d6',
-    color: '#fff',
-    borderRadius: 5,
-    alignSelf: 'flex-start',
+    marginBottom: 5,
   },
   stats: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     marginTop: 10,
   },
-  stat: {
-    alignItems: 'center',
-  },
-  statNumber: {
-    fontWeight: 'bold',
-  },
-  statLabel: {
-    color: '#666',
+  statItem: {
+    marginBottom: 5,
   },
 });
 
 const RepositoryItem = ({ repository }) => {
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Image
-          style={styles.avatar}
-          source={{ uri: repository.ownerAvatarUrl }}
-        />
-        <View style={styles.info}>
-          <Text style={styles.fullName}>{repository.fullName}</Text>
-          <Text style={styles.description}>{repository.description}</Text>
-          <Text style={styles.language}>{repository.language}</Text>
-        </View>
-      </View>
+      <Text style={styles.fullName}>Full name: {repository.fullName}</Text>
+      <Text style={styles.description}>Description: {repository.description}</Text>
+      <Text style={styles.language}>Language: {repository.language}</Text>
+      
       <View style={styles.stats}>
-        <View style={styles.stat}>
-          <Text style={styles.statNumber}>{repository.stargazersCount}</Text>
-          <Text style={styles.statLabel}>Stars</Text>
-        </View>
-        <View style={styles.stat}>
-          <Text style={styles.statNumber}>{repository.forksCount}</Text>
-          <Text style={styles.statLabel}>Forks</Text>
-        </View>
-        <View style={styles.stat}>
-          <Text style={styles.statNumber}>{repository.reviewCount}</Text>
-          <Text style={styles.statLabel}>Reviews</Text>
-        </View>
-        <View style={styles.stat}>
-          <Text style={styles.statNumber}>{repository.ratingAverage}</Text>
-          <Text style={styles.statLabel}>Rating</Text>
-        </View>
+        <Text style={styles.statItem}>Stars: {repository.stargazersCount}</Text>
+        <Text style={styles.statItem}>Forks: {repository.forksCount}</Text>
+        <Text style={styles.statItem}>Reviews: {repository.reviewCount}</Text>
+        <Text style={styles.statItem}>Rating: {repository.ratingAverage}</Text>
       </View>
     </View>
   );
