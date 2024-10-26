@@ -3,6 +3,7 @@ import { View, TextInput, Button, StyleSheet } from 'react-native';
 import Text from './Text';
 import { Formik } from 'formik';
 import * as yup from 'yup';
+import useSignIn from '../hooks/useSignIn';
 
 // Validation schema using Yup
 const validationSchema = yup.object().shape({
@@ -15,14 +16,26 @@ const validationSchema = yup.object().shape({
 });
 
 const SignIn = () => {
+  const [signIn] = useSignIn();
+
   const initialValues = {
     username: '',
     password: '',
   };
 
-  const onSubmit = (values) => {
-    console.log('Form submitted:', values);
+  const onSubmit = async (values) => {
+    const { username, password } = values;
+    console.log("THIS IS ONSUBMIT");
+
+    try {
+      const data = await signIn({ username, password });
+      console.log("Access Token in SignIn component:", data.authenticate.accessToken);
+      // Navigate to a different screen or store the token
+    } catch (e) {
+      console.log("Error during sign-in:", e);
+    }
   };
+
 
   return (
     <Formik
