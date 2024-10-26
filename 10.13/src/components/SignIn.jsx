@@ -25,7 +25,6 @@ const SignIn = () => {
 
   const onSubmit = async (values) => {
     const { username, password } = values;
-    console.log("THIS IS ONSUBMIT");
 
     try {
       const data = await signIn({ username, password });
