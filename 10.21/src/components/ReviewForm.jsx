@@ -25,16 +25,19 @@ const ReviewForm = () => {
   const [createReview] = useMutation(CREATE_REVIEW);
   const navigate = useNavigate();
 
-  // Function to handle form submission
+    // Function to handle form submission
   const onSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
+      // Convert rating to a number
+      const rating = parseInt(values.rating, 10);
+
       // Call createReview mutation with the correct argument structure
       const { data } = await createReview({
         variables: {
           review: {
             repositoryName: values.repositoryName,
             ownerName: values.ownerName,
-            rating: values.rating,
+            rating, // Pass the parsed integer here
             text: values.review,
           },
         },
@@ -49,6 +52,7 @@ const ReviewForm = () => {
       setSubmitting(false);
     }
   };
+
 
   return (
     <Formik
