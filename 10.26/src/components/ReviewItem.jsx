@@ -67,7 +67,6 @@ const ReviewItem = ({ review, showUsername = true, showRepositoryName = false, s
   };
 
 	const onDelete = () => {
-		console.log("THIS IS ONDELETE!!!");
     Alert.alert(
       'Delete Review',
       'Are you sure you want to delete this review?',
