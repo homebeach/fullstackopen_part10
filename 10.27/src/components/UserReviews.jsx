@@ -17,21 +17,32 @@ const styles = StyleSheet.create({
 const ItemSeparator = () => <View style={styles.separator} />;
 
 const UserReviews = () => {
-  const { reviews, loading, error } = useUserReviews(true);
+  const { reviews: fetchedReviews, loading, error, refetch } = useUserReviews(true);
 
   if (loading) return <Text>Loading reviews...</Text>;
   if (error) return <Text>Error loading reviews</Text>;
 
+  // Callback to refresh reviews by refetching
+  const handleReviewDeleted = () => {
+    refetch();
+  };
+
   // Render each review item, passing showButtons as true to show the buttons
   const renderReviewItem = ({ item }) => (
-    <ReviewItem review={item} showUsername={false} showRepositoryName={true} showButtons={true} /> // Pass showButtons prop
+    <ReviewItem
+      review={item}
+      showUsername={false}
+      showRepositoryName={true}
+      showButtons={true}
+      onReviewDeleted={handleReviewDeleted} // Pass the callback to ReviewItem
+    />
   );
 
   return (
     <View style={styles.container}>
       <Text style={{ fontWeight: 'bold', marginBottom: 10 }}>Your Reviews:</Text>
       <FlatList
-        data={reviews} // Use reviews directly
+        data={fetchedReviews} // Use fetchedReviews directly
         renderItem={renderReviewItem}
         keyExtractor={(item) => item.id}
         ItemSeparatorComponent={ItemSeparator}
