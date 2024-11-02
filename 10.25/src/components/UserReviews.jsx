@@ -65,7 +65,7 @@ const UserReviews = () => {
         <Text style={styles.ratingText}>{item.rating}</Text>
       </View>
       <View style={styles.reviewContent}>
-        <Text style={styles.username}>{item.user?.username || 'You'}</Text>
+        <Text style={styles.username}>{item.repository?.name || 'You'}</Text>
         <Text style={styles.date}>{format(new Date(item.createdAt), 'dd.MM.yyyy')}</Text>
         <Text style={styles.reviewText}>{item.text}</Text>
       </View>
