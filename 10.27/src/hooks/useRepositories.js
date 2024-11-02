@@ -1,3 +1,4 @@
+// useRepositories.js
 import { useQuery } from '@apollo/client';
 import { GET_REPOSITORIES } from '../graphql/queries';
 
@@ -5,25 +6,36 @@ const useRepositories = ({
   orderBy = 'CREATED_AT', 
   orderDirection = 'DESC', 
   first = 10, 
-  after = '', 
   searchKeyword = '' 
 } = {}) => {
   
-  // Only include `after` and `searchKeyword` in the query if they're not empty
-  const variables = {
-    orderBy,
-    orderDirection,
-    first,
-    ...(after && { after }), // Include `after` only if it’s truthy
-    ...(searchKeyword && { searchKeyword }) // Include `searchKeyword` only if it’s truthy
-  };
-
-  const { data, loading, error, refetch } = useQuery(GET_REPOSITORIES, {
-    variables,
+  const { data, loading, error, fetchMore, refetch } = useQuery(GET_REPOSITORIES, {
+    variables: {
+      orderBy,
+      orderDirection,
+      first,
+      searchKeyword,
+    },
     fetchPolicy: 'cache-and-network',
+    notifyOnNetworkStatusChange: true, // Allows loading indicators for fetchMore
   });
 
-  return { data, loading, error, refetch };
+  // Wrapped fetchMore function to load additional pages
+  const handleFetchMore = () => {
+    if (data?.repositories.pageInfo.hasNextPage) {
+      fetchMore({
+        variables: {
+          after: data.repositories.pageInfo.endCursor,
+          orderBy,
+          orderDirection,
+          first,
+          searchKeyword,
+        },
+      });
+    }
+  };
+
+  return { data, loading, error, refetch, fetchMore: handleFetchMore }; // Return fetchMore
 };
 
 export default useRepositories;

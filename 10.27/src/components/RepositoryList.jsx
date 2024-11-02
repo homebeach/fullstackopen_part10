@@ -21,21 +21,6 @@ const RepositoryList = () => {
 
   const repositories = data ? data.repositories.edges.map(edge => edge.node) : [];
 
-  const handleFetchMore = () => {
-    const canFetchMore = !data || data.repositories.pageInfo.hasNextPage;
-    if (canFetchMore) {
-      fetchMore({
-        variables: {
-          after: data.repositories.pageInfo.endCursor,
-          orderBy,
-          orderDirection,
-          searchKeyword: debouncedSearchQuery,
-          first: 5,
-        },
-      });
-    }
-  };
-
   return (
     <RepositoryListContainer
       repositories={repositories}
@@ -43,7 +28,7 @@ const RepositoryList = () => {
       setSearchQuery={setSearchQuery}
       selectedOrder={selectedOrder}
       onOrderChange={setSelectedOrder}
-      onEndReached={handleFetchMore} // Pass fetch more handler
+      onEndReached={fetchMore} // Pass fetchMore directly
     />
   );
 };
