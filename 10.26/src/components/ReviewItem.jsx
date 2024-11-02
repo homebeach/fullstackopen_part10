@@ -1,9 +1,11 @@
 // components/ReviewItem.js
 import React from 'react';
 import { View, Button, StyleSheet, Alert } from 'react-native';
-import Text from './Text';
-import { format } from 'date-fns';
+import { useMutation } from '@apollo/client';
 import { useNavigate } from 'react-router-native';
+import { format } from 'date-fns';
+import Text from './Text';
+import { DELETE_REVIEW } from '../graphql/mutations';
 
 const styles = StyleSheet.create({
   reviewItem: {
@@ -58,15 +60,29 @@ const styles = StyleSheet.create({
   },
 });
 
-const ReviewItem = ({ review, showUsername = true, showRepositoryName = false, showButtons = true }) => {
-
+const ReviewItem = ({ review, showUsername = true, showRepositoryName = false, showButtons = true, onReviewDeleted }) => {
   const navigate = useNavigate();
 
+  // Set up the delete mutation with Apollo Client
+  const [deleteReview] = useMutation(DELETE_REVIEW, {
+    variables: { id: review.id },
+    onError: (error) => {
+      console.error('Error deleting review:', error);
+      Alert.alert('Error', 'Failed to delete review. Please try again.');
+    },
+    onCompleted: () => {
+      if (onReviewDeleted) {
+        onReviewDeleted(review.id); // Callback to parent to update UI
+      }
+      console.log(`Review with ID ${review.id} deleted.`);
+    },
+  });
+
   const onViewRepository = () => {
-      navigate(`/repositories/${review.repository.id}`);
+    navigate(`/repositories/${review.repository.id}`);
   };
 
-	const onDelete = () => {
+  const onDelete = () => {
     Alert.alert(
       'Delete Review',
       'Are you sure you want to delete this review?',
@@ -75,13 +91,7 @@ const ReviewItem = ({ review, showUsername = true, showRepositoryName = false, s
         {
           text: 'Delete',
           style: 'destructive',
-          onPress: async () => {
-            try {
-              console.log(`Review with ID ${review.id} deleted.`);
-            } catch (e) {
-              console.error('Error deleting review:', e);
-            }
-          },
+          onPress: () => deleteReview(), // Call the delete mutation directly
         },
       ]
     );
@@ -94,12 +104,12 @@ const ReviewItem = ({ review, showUsername = true, showRepositoryName = false, s
       </View>
       <View style={styles.reviewContent}>
         {showRepositoryName && (
-          <Text style={styles.repositoryName}>{review.repository.name}</Text> // Safely access repository name
+          <Text style={styles.repositoryName}>{review.repository.name}</Text>
         )}
         {showUsername && <Text style={styles.username}>{review.user.username}</Text>}
         <Text style={styles.date}>{format(new Date(review.createdAt), 'dd.MM.yyyy')}</Text>
         <Text style={styles.reviewText}>{review.text}</Text>
-        {showButtons && ( // Conditionally render buttons
+        {showButtons && (
           <View style={styles.buttonContainer}>
             <View style={styles.button}>
               <Button title="View repository" onPress={onViewRepository} color="#007bff" />
