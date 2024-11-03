@@ -8,6 +8,7 @@ import { format } from 'date-fns';
 const styles = StyleSheet.create({
   container: {
     padding: 15,
+    flex: 1
   },
   separator: {
     height: 10,
