@@ -110,7 +110,6 @@ const RepositoryScreen = () => {
         keyExtractor={({ id }) => id}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
         ListHeaderComponent={() => <Text style={{ fontWeight: 'bold', marginTop: 20 }}>Reviews:</Text>}
-        ListFooterComponent={<View style={{ height: 20 }} />}
       />
     </View>
   );
