@@ -10,6 +10,7 @@ import Text from './Text';
 const styles = StyleSheet.create({
   container: {
     padding: 15,
+    flex: 1
   },
   buttonContainer: {
     alignSelf: 'center',
