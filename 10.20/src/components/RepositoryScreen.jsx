@@ -10,6 +10,7 @@ import Text from './Text';
 const styles = StyleSheet.create({
   container: {
     padding: 15,
+    flex: 1
   },
   buttonContainer: {
     alignSelf: 'center',
@@ -103,16 +104,17 @@ const RepositoryScreen = () => {
         <Button title="Open in GitHub" onPress={() => Linking.openURL(repository.url)} />
       </View>
 
-      {/* Reviews List */}
       <FlatList
         data={reviews}
         renderItem={renderReviewItem}
         keyExtractor={({ id }) => id}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
         ListHeaderComponent={() => <Text style={{ fontWeight: 'bold', marginTop: 20 }}>Reviews:</Text>}
+        ListFooterComponent={<View style={{ height: 20 }} />}
       />
     </View>
   );
+
 };
 
 export default RepositoryScreen;
