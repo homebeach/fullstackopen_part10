@@ -11,6 +11,7 @@ import ReviewItem from './ReviewItem';
 const styles = StyleSheet.create({
   container: {
     padding: 15,
+    flex: 1
   },
   buttonContainer: {
     alignSelf: 'center',
