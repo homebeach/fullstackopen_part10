@@ -1,6 +1,6 @@
 // components/UserReviews.js
 import React from 'react';
-import { View, FlatList, StyleSheet } from 'react-native';
+import { View, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
 import Text from './Text';
 import useUserReviews from '../hooks/useUserReviews';
 import ReviewItem from './ReviewItem';
@@ -8,34 +8,35 @@ import ReviewItem from './ReviewItem';
 const styles = StyleSheet.create({
   container: {
     padding: 15,
-    flex: 1
+    flex: 1,
   },
   separator: {
     height: 10,
+  },
+  loadingIndicator: {
+    marginVertical: 20,
   },
 });
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
 const UserReviews = () => {
-  const { reviews: fetchedReviews, loading, error, refetch } = useUserReviews(true);
+  const { reviews, loading, error, refetch, fetchMore } = useUserReviews(true);
 
-  if (loading) return <Text>Loading reviews...</Text>;
+  if (loading && reviews.length === 0) return <Text>Loading reviews...</Text>;
   if (error) return <Text>Error loading reviews</Text>;
 
-  // Callback to refresh reviews by refetching
   const handleReviewDeleted = () => {
     refetch();
   };
 
-  // Render each review item, passing showButtons as true to show the buttons
   const renderReviewItem = ({ item }) => (
     <ReviewItem
       review={item}
       showUsername={false}
       showRepositoryName={true}
       showButtons={true}
-      onReviewDeleted={handleReviewDeleted} // Pass the callback to ReviewItem
+      onReviewDeleted={handleReviewDeleted}
     />
   );
 
@@ -43,10 +44,15 @@ const UserReviews = () => {
     <View style={styles.container}>
       <Text style={{ fontWeight: 'bold', marginBottom: 10 }}>Your Reviews:</Text>
       <FlatList
-        data={fetchedReviews} // Use fetchedReviews directly
+        data={reviews}
         renderItem={renderReviewItem}
         keyExtractor={(item) => item.id}
         ItemSeparatorComponent={ItemSeparator}
+        ListFooterComponent={() =>
+          loading ? <ActivityIndicator style={styles.loadingIndicator} /> : null
+        }
+        onEndReached={fetchMore} // Trigger fetchMore when end is reached
+        onEndReachedThreshold={0.5} // Adjust threshold as needed
       />
     </View>
   );
